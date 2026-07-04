@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
-import { buildRules, runScenarios, CORPUS, type ScenarioReport } from '0x13d-attack-rules-community';
+import { buildRules, buildResponseRegistry, runScenarios, CORPUS, RESPONSE_IDS, type ScenarioReport } from '0x13d-attack-rules-community';
+import { compileAuthoredRule } from '0x13d-attack-rules-community/compile';
+import { validateAuthoredRule, type AuthoredRule } from '@attack/rule-schema';
 
 /**
  * Run the community scenario corpus against the community rule set and render the detection / false-positive
@@ -76,5 +78,117 @@ function renderHtml(r: ScenarioReport): string {
       <tbody>${rows}</tbody>
     </table>
     ${badList}
+  </body></html>`;
+}
+
+// ── tune the authored rule in the active editor against the corpus ────────────────────────────────
+
+interface CaseOutcome { label: string; technique: string; fired: boolean; }
+interface TuneResult {
+  ruleId: string;
+  technique: string;
+  scope: string;
+  detected: CaseOutcome[]; // malicious cases of the rule's technique that fired
+  missed: CaseOutcome[]; // malicious cases of the rule's technique that did NOT fire
+  falsePositives: CaseOutcome[]; // benign cases (of the rule's scope) that fired
+  benignChecked: number;
+}
+
+/**
+ * Compile the authored rule in the active editor and run it against the corpus cases for its scope: how many
+ * known-malicious cases of its technique it catches, and whether it trips any benign case. This is the live
+ * tuning loop — narrow the condition to kill a false positive, broaden it to catch a missed case, re-run.
+ */
+export function tuneActiveRule(): void {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor) {
+    void vscode.window.showWarningMessage('Open a *.attackrule.json rule file first.');
+    return;
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(editor.document.getText());
+  } catch (err) {
+    void vscode.window.showErrorMessage(`Not valid JSON: ${(err as Error).message}`);
+    return;
+  }
+  const validation = validateAuthoredRule(parsed, RESPONSE_IDS);
+  if (!validation.ok) {
+    void vscode.window.showErrorMessage(`Rule rejected — fix before tuning:\n• ${validation.errors.join('\n• ')}`);
+    return;
+  }
+
+  const authored = parsed as AuthoredRule;
+  let result: TuneResult;
+  try {
+    // Responses never fire during tuning (the harness only tests the signature), but pass the real registry
+    // so response-id resolution matches the extension exactly.
+    const rule = compileAuthoredRule(authored, buildResponseRegistry());
+    const subset = CORPUS.filter((c) => rule.scope.includes(c.scope));
+    const report = runScenarios([rule], subset);
+    const detected: CaseOutcome[] = [];
+    const missed: CaseOutcome[] = [];
+    const falsePositives: CaseOutcome[] = [];
+    for (const r of report.results) {
+      const fired = r.fired.length > 0;
+      if (r.malicious && r.technique === rule.technique) (fired ? detected : missed).push({ label: r.label, technique: r.technique, fired });
+      else if (!r.malicious && fired) falsePositives.push({ label: r.label, technique: r.technique, fired });
+    }
+    result = {
+      ruleId: rule.id,
+      technique: rule.technique,
+      scope: String(rule.scope[0]),
+      detected,
+      missed,
+      falsePositives,
+      benignChecked: report.results.filter((r) => !r.malicious).length,
+    };
+  } catch (err) {
+    void vscode.window.showErrorMessage(`Could not tune rule: ${(err as Error).message}`);
+    return;
+  }
+
+  const panel = vscode.window.createWebviewPanel(
+    'attackTune',
+    `Tune: ${result.ruleId}`,
+    vscode.ViewColumn.Beside,
+    { enableScripts: false },
+  );
+  panel.webview.html = renderTuneHtml(result);
+}
+
+function renderTuneHtml(t: TuneResult): string {
+  const targetTotal = t.detected.length + t.missed.length;
+  const li = (o: CaseOutcome, cls: string, tag: string) => `<li class="${cls}">${tag} · ${esc(o.label)}</li>`;
+  const detectionBlock = targetTotal === 0
+    ? `<p class="muted">No malicious reference cases for <code>${esc(t.technique)}</code> in the corpus — add some to <code>rules/src/scenarios/corpus.ts</code> to measure detection. False-positive tripwires for the <code>${esc(t.scope)}</code> scope are still checked below.</p>`
+    : `<p>Catches <b class="${t.missed.length ? 'warn' : 'ok'}">${t.detected.length}/${targetTotal}</b> known-malicious <code>${esc(t.technique)}</code> cases.</p>
+       <ul>${t.detected.map((o) => li(o, 'ok', '✓ caught')).join('')}${t.missed.map((o) => li(o, 'warn', '✗ missed')).join('')}</ul>`;
+
+  const fpBlock = t.falsePositives.length
+    ? `<h2 class="bad">False positives (${t.falsePositives.length})</h2>
+       <p class="muted">Your rule fired on these benign <code>${esc(t.scope)}</code> cases — tighten the condition.</p>
+       <ul>${t.falsePositives.map((o) => li(o, 'bad', `⚠ ${esc(o.technique)}`)).join('')}</ul>`
+    : `<p class="ok">✓ No false positives across ${t.benignChecked} benign ${esc(t.scope)} case(s).</p>`;
+
+  const verdict = t.falsePositives.length === 0 && t.missed.length === 0 && targetTotal > 0
+    ? `<p class="clean">✓ Clean — catches every reference case for its technique, trips no benign case.</p>` : '';
+
+  return `<!doctype html><html><head><meta charset="utf-8"><style>
+    body { font-family: var(--vscode-font-family); color: var(--vscode-foreground); padding: 1rem 1.25rem; }
+    h1 { font-size: 1.1rem; } h2 { font-size: 1rem; margin-top: 1.4rem; }
+    .muted { opacity: .8; } code { background: var(--vscode-textCodeBlock-background); padding: 0 .3rem; border-radius: 3px; }
+    ul { line-height: 1.6; padding-left: 0; } li { list-style: none; }
+    .ok { color: var(--vscode-testing-iconPassed, #3fb950); }
+    .warn { color: var(--vscode-testing-iconQueued, #d29922); }
+    .bad { color: var(--vscode-testing-iconFailed, #f85149); }
+    .clean { color: var(--vscode-testing-iconPassed, #3fb950); font-weight: 600; }
+  </style></head><body>
+    <h1>Tuning <code>${esc(t.ruleId)}</code> · ${esc(t.technique)} · scope <code>${esc(t.scope)}</code></h1>
+    ${verdict}
+    <h2>Detection</h2>
+    ${detectionBlock}
+    ${fpBlock}
+    <p class="muted" style="margin-top:1.5rem">Edit the rule and re-run this command to see the effect. The same corpus and runner back <code>npm run scenarios</code>.</p>
   </body></html>`;
 }

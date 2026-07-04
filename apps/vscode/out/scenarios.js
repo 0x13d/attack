@@ -34,8 +34,11 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.runScenarioReport = runScenarioReport;
+exports.tuneActiveRule = tuneActiveRule;
 const vscode = __importStar(require("vscode"));
 const _0x13d_attack_rules_community_1 = require("0x13d-attack-rules-community");
+const compile_1 = require("0x13d-attack-rules-community/compile");
+const rule_schema_1 = require("@attack/rule-schema");
 /**
  * Run the community scenario corpus against the community rule set and render the detection / false-positive
  * report in a webview. This is the tuning feedback loop surfaced in the authoring tool: an author can watch,
@@ -100,6 +103,97 @@ function renderHtml(r) {
       <tbody>${rows}</tbody>
     </table>
     ${badList}
+  </body></html>`;
+}
+/**
+ * Compile the authored rule in the active editor and run it against the corpus cases for its scope: how many
+ * known-malicious cases of its technique it catches, and whether it trips any benign case. This is the live
+ * tuning loop — narrow the condition to kill a false positive, broaden it to catch a missed case, re-run.
+ */
+function tuneActiveRule() {
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+        void vscode.window.showWarningMessage('Open a *.attackrule.json rule file first.');
+        return;
+    }
+    let parsed;
+    try {
+        parsed = JSON.parse(editor.document.getText());
+    }
+    catch (err) {
+        void vscode.window.showErrorMessage(`Not valid JSON: ${err.message}`);
+        return;
+    }
+    const validation = (0, rule_schema_1.validateAuthoredRule)(parsed, _0x13d_attack_rules_community_1.RESPONSE_IDS);
+    if (!validation.ok) {
+        void vscode.window.showErrorMessage(`Rule rejected — fix before tuning:\n• ${validation.errors.join('\n• ')}`);
+        return;
+    }
+    const authored = parsed;
+    let result;
+    try {
+        // Responses never fire during tuning (the harness only tests the signature), but pass the real registry
+        // so response-id resolution matches the extension exactly.
+        const rule = (0, compile_1.compileAuthoredRule)(authored, (0, _0x13d_attack_rules_community_1.buildResponseRegistry)());
+        const subset = _0x13d_attack_rules_community_1.CORPUS.filter((c) => rule.scope.includes(c.scope));
+        const report = (0, _0x13d_attack_rules_community_1.runScenarios)([rule], subset);
+        const detected = [];
+        const missed = [];
+        const falsePositives = [];
+        for (const r of report.results) {
+            const fired = r.fired.length > 0;
+            if (r.malicious && r.technique === rule.technique)
+                (fired ? detected : missed).push({ label: r.label, technique: r.technique, fired });
+            else if (!r.malicious && fired)
+                falsePositives.push({ label: r.label, technique: r.technique, fired });
+        }
+        result = {
+            ruleId: rule.id,
+            technique: rule.technique,
+            scope: String(rule.scope[0]),
+            detected,
+            missed,
+            falsePositives,
+            benignChecked: report.results.filter((r) => !r.malicious).length,
+        };
+    }
+    catch (err) {
+        void vscode.window.showErrorMessage(`Could not tune rule: ${err.message}`);
+        return;
+    }
+    const panel = vscode.window.createWebviewPanel('attackTune', `Tune: ${result.ruleId}`, vscode.ViewColumn.Beside, { enableScripts: false });
+    panel.webview.html = renderTuneHtml(result);
+}
+function renderTuneHtml(t) {
+    const targetTotal = t.detected.length + t.missed.length;
+    const li = (o, cls, tag) => `<li class="${cls}">${tag} · ${esc(o.label)}</li>`;
+    const detectionBlock = targetTotal === 0
+        ? `<p class="muted">No malicious reference cases for <code>${esc(t.technique)}</code> in the corpus — add some to <code>rules/src/scenarios/corpus.ts</code> to measure detection. False-positive tripwires for the <code>${esc(t.scope)}</code> scope are still checked below.</p>`
+        : `<p>Catches <b class="${t.missed.length ? 'warn' : 'ok'}">${t.detected.length}/${targetTotal}</b> known-malicious <code>${esc(t.technique)}</code> cases.</p>
+       <ul>${t.detected.map((o) => li(o, 'ok', '✓ caught')).join('')}${t.missed.map((o) => li(o, 'warn', '✗ missed')).join('')}</ul>`;
+    const fpBlock = t.falsePositives.length
+        ? `<h2 class="bad">False positives (${t.falsePositives.length})</h2>
+       <p class="muted">Your rule fired on these benign <code>${esc(t.scope)}</code> cases — tighten the condition.</p>
+       <ul>${t.falsePositives.map((o) => li(o, 'bad', `⚠ ${esc(o.technique)}`)).join('')}</ul>`
+        : `<p class="ok">✓ No false positives across ${t.benignChecked} benign ${esc(t.scope)} case(s).</p>`;
+    const verdict = t.falsePositives.length === 0 && t.missed.length === 0 && targetTotal > 0
+        ? `<p class="clean">✓ Clean — catches every reference case for its technique, trips no benign case.</p>` : '';
+    return `<!doctype html><html><head><meta charset="utf-8"><style>
+    body { font-family: var(--vscode-font-family); color: var(--vscode-foreground); padding: 1rem 1.25rem; }
+    h1 { font-size: 1.1rem; } h2 { font-size: 1rem; margin-top: 1.4rem; }
+    .muted { opacity: .8; } code { background: var(--vscode-textCodeBlock-background); padding: 0 .3rem; border-radius: 3px; }
+    ul { line-height: 1.6; padding-left: 0; } li { list-style: none; }
+    .ok { color: var(--vscode-testing-iconPassed, #3fb950); }
+    .warn { color: var(--vscode-testing-iconQueued, #d29922); }
+    .bad { color: var(--vscode-testing-iconFailed, #f85149); }
+    .clean { color: var(--vscode-testing-iconPassed, #3fb950); font-weight: 600; }
+  </style></head><body>
+    <h1>Tuning <code>${esc(t.ruleId)}</code> · ${esc(t.technique)} · scope <code>${esc(t.scope)}</code></h1>
+    ${verdict}
+    <h2>Detection</h2>
+    ${detectionBlock}
+    ${fpBlock}
+    <p class="muted" style="margin-top:1.5rem">Edit the rule and re-run this command to see the effect. The same corpus and runner back <code>npm run scenarios</code>.</p>
   </body></html>`;
 }
 //# sourceMappingURL=scenarios.js.map

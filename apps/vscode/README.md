@@ -12,6 +12,10 @@ Author and validate **0x13d::att&ck** (Browser EDR) detection rules in VSCode. R
 - **0x13d::att&ck: Run scenario harness** — runs the community corpus (`0x13d-attack-rules-community`) against
   the community rule set and renders a detection / false-positive report per technique in a panel. The same
   loop the CLI harness runs (`npm run scenarios`), surfaced in the editor for tuning.
+- **0x13d::att&ck: Tune rule in active editor against the corpus** — validates and **compiles** the authored
+  rule you're editing, runs it against the corpus cases for its scope, and reports how many known-malicious
+  cases of its technique it catches and whether it trips any benign case. Narrow the condition to kill a false
+  positive, broaden it to catch a missed case, re-run — a live tuning loop for the rule you're writing.
 - An `attackrule` snippet.
 
 ## Use

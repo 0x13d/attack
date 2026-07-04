@@ -80,9 +80,25 @@ const report = runScenarios(buildRules(), CORPUS);   // report.byTechnique, repo
 This is the tuning loop: add a realistic benign case that trips a rule, watch the FP count rise, tighten the
 policy or heuristic, and re-run until detections hold and false positives return to zero. The corpus is plain
 JSON-serializable data (`src/scenarios/corpus.ts`) — grow it to harden a rule, or ship your own. A unit test
-(`scenarios.test.ts`) keeps the shipped corpus clean in CI. The **VS Code rule-authoring extension** surfaces
-the same report in a panel (command: *"0x13d::att&ck: Run scenario harness"*), so authoring and tuning share
-one engine.
+(`scenarios.test.ts`) keeps the shipped corpus clean in CI.
+
+### Tuning your own authored rules
+
+The package also compiles a declarative **authored rule** (the `@attack/rule-schema` format) into a runnable
+`Rule`, so you can drive *your* rule through the same corpus:
+
+```ts
+import { compileAuthoredRule } from '0x13d-attack-rules-community/compile';
+import { buildResponseRegistry, runScenarios, CORPUS } from '0x13d-attack-rules-community';
+
+const rule = compileAuthoredRule(myAuthoredRule, buildResponseRegistry());
+const forMyScope = CORPUS.filter((c) => rule.scope.includes(c.scope));
+const report = runScenarios([rule], forMyScope);   // did it catch the malicious cases? trip any benign one?
+```
+
+The **VS Code rule-authoring extension** wraps exactly this: *"Run scenario harness"* shows the full community
+report, and *"Tune rule against the corpus"* compiles the rule in your editor and reports its detections and
+false positives live — so authoring and tuning share one engine.
 
 ## License
 

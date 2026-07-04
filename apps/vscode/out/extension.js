@@ -76,7 +76,7 @@ function activate(context) {
         else {
             void vscode.window.showErrorMessage(`Rule rejected:\n• ${result.errors.join('\n• ')}`);
         }
-    }), vscode.commands.registerCommand('attack.runScenarios', () => (0, scenarios_1.runScenarioReport)()));
+    }), vscode.commands.registerCommand('attack.runScenarios', () => (0, scenarios_1.runScenarioReport)()), vscode.commands.registerCommand('attack.tuneRule', () => (0, scenarios_1.tuneActiveRule)()));
 }
 function deactivate() {
     // nothing to clean up

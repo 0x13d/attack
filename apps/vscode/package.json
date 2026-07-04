@@ -16,7 +16,8 @@
     "commands": [
       { "command": "attack.newRule", "title": "0x13d::att&ck: New rule from template" },
       { "command": "attack.validateRule", "title": "0x13d::att&ck: Validate rule in active editor" },
-      { "command": "attack.runScenarios", "title": "0x13d::att&ck: Run scenario harness (detection + false-positive report)" }
+      { "command": "attack.runScenarios", "title": "0x13d::att&ck: Run scenario harness (detection + false-positive report)" },
+      { "command": "attack.tuneRule", "title": "0x13d::att&ck: Tune rule in active editor against the corpus" }
     ],
     "snippets": [
       { "language": "json", "path": "./snippets/attackrule.code-snippets" }

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { validateAuthoredRule } from './validate';
-import { runScenarioReport } from './scenarios';
+import { runScenarioReport, tuneActiveRule } from './scenarios';
 
 const TEMPLATE = {
   id: 'user.my-rule',
@@ -45,6 +45,8 @@ export function activate(context: vscode.ExtensionContext): void {
     }),
 
     vscode.commands.registerCommand('attack.runScenarios', () => runScenarioReport()),
+
+    vscode.commands.registerCommand('attack.tuneRule', () => tuneActiveRule()),
   );
 }
 
