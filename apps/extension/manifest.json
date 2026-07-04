@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "0x13d::att&ck — Browser EDR",
+  "version": "0.1.0",
+  "description": "Browser Endpoint Detection & Response — matches browser events to MITRE ATT&CK signatures and responds. Chrome + Edge.",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "management",
+    "notifications",
+    "storage",
+    "webNavigation",
+    "cookies",
+    "downloads"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "storage": {
+    "managed_schema": "managed_schema.json"
+  },
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "minimum_chrome_version": "110"
+}

@@ -1,0 +1,5 @@
+BENIGN DEMO ARTIFACT — attack / T1566.001 Spearphishing Attachment.
+
+Plain text, NOT a real macro-enabled Word document. Its name ("invoice.docm") is an attachment-lure type; the
+detection keys on this lure type ARRIVING FROM A DELIVERY CONTEXT (the download's referrer being a webmail /
+file-share origin, or an otherwise suspicious origin). It contains no macro and does nothing. Safe to delete.

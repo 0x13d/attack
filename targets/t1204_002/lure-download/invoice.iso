@@ -1,0 +1,5 @@
+BENIGN DEMO ARTIFACT — attack / T1204.002 User Execution: Malicious File.
+
+This is plain text, NOT a real disk image. Its name ("invoice.iso") exhibits the shape of a user-execution
+lure — a container/disk-image a victim is socially-engineered into mounting and double-clicking to run, which
+also bypasses mark-of-the-web. It does nothing. Safe to open in a text editor, safe to delete.

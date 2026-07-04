@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1606.002 — benign SAML-flow target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1606.002 target — Forge Web Credentials: SAML</h1>
+  <p>
+    These links navigate to URLs carrying a <strong>SAML assertion indicator</strong> on a host that is
+    <em>not</em> in the operator's <code>samlTrustedHosts</code> allowlist — the shape of a forged/golden-SAML
+    assertion delivered to an unexpected service provider. With the <code>attack</code> EDR loaded each raises a
+    <strong>T1606.002</strong> detection (visibility, detect + alert). No real assertion; nothing runs.
+  </p>
+
+  <p><a href="acs.html?SAMLResponse=PHNhbWxwOlJlc3BvbnNlAAAA">➡ SAML assertion via redirect (<code>?SAMLResponse=</code>)</a></p>
+  <p><a href="saml2/acs.html">➡ SAML ACS endpoint path (<code>/saml2/acs</code>)</a></p>
+
+  <hr>
+  <p class="note">
+    A SOC/credential-forging visibility signal — distinct from the phishing-nav rules. An operator allowlists
+    their real IdP/SP (e.g. <code>okta.com</code>, <code>microsoftonline.com</code>) in
+    <code>policy.samlTrustedHosts</code> to silence expected SSO; here the host is unlisted, so it fires.
+  </p>
+</body>
+</html>

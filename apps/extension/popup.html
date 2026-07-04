@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>0x13d::att&amp;ck — Detections</title>
+    <style>
+      /* Ink palette: paper/ink + indigo accent; red for unacknowledged. */
+      :root {
+        --paper: #fbfaf7;
+        --ink: #11120f;
+        --muted: #5a5a5a;
+        --line: #e4e0d8;
+        --accent: #3f4c6b;
+        --red: #b02b2c;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        width: 460px;
+        font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: var(--ink);
+        background: var(--paper);
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      header h1 { font-size: 14px; margin: 0; letter-spacing: 0.2px; }
+      header .sub { color: var(--muted); font-size: 11px; }
+      .actions { display: flex; gap: 6px; }
+      button {
+        font: inherit;
+        font-size: 12px;
+        padding: 4px 9px;
+        border: 1px solid var(--line);
+        background: #fff;
+        border-radius: 5px;
+        cursor: pointer;
+        color: var(--ink);
+      }
+      button:hover { border-color: var(--accent); }
+      button.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+      button:disabled { opacity: 0.5; cursor: default; }
+      .wrap { max-height: 420px; overflow-y: auto; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+      th { font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); position: sticky; top: 0; background: var(--paper); }
+      .tech { font-weight: 600; color: var(--accent); white-space: nowrap; }
+      .reasons { color: var(--muted); font-size: 12px; }
+      .when { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+      tr.unack { background: rgba(176, 43, 44, 0.06); }
+      tr.unack .dot { color: var(--red); font-weight: 700; }
+      .status { white-space: nowrap; }
+      .empty { padding: 28px 14px; text-align: center; color: var(--muted); }
+      footer { padding: 8px 14px; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>0x13d::att&amp;ck — Detections</h1>
+        <div class="sub" id="summary">—</div>
+      </div>
+      <div class="actions">
+        <button id="ackAll" class="primary">Acknowledge all</button>
+        <button id="rules" title="Manage detection rules">Rules</button>
+        <button id="exportTrace" title="Download the Signal→Hit event trace as JSON">Export trace</button>
+        <button id="clear">Clear</button>
+      </div>
+    </header>
+    <div class="wrap">
+      <table>
+        <thead>
+          <tr><th>Technique</th><th>Detection</th><th>When</th><th>Status</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div class="empty" id="empty" hidden>No detections yet. Load a rogue extension to see one.</div>
+    </div>
+    <footer>Local-only. Unacknowledged shown in red. Nothing leaves your browser.</footer>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

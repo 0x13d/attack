@@ -1,0 +1,26 @@
+{
+  "name": "attack-extension",
+  "private": true,
+  "version": "0.1.0",
+  "description": "attack — Browser EDR (MV3 extension). MITRE ATT&CK signatures + active response. Chrome + Edge.",
+  "license": "AGPL-3.0-only",
+  "type": "module",
+  "dependencies": {
+    "@attack/rule-schema": "*",
+    "0x13d-attack-rules-community": "*"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx/esm --test \"src/**/*.test.ts\"",
+    "gen:schema": "node --import tsx/esm tools/gen-rule-schema.ts",
+    "check:schema": "node --import tsx/esm tools/gen-rule-schema.ts --check"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^20.14.0",
+    "esbuild": "^0.28.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.4.5"
+  }
+}

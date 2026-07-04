@@ -1,0 +1,28 @@
+{
+  "name": "attack-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "license": "AGPL-3.0-only",
+  "description": "0x13d::att&ck Browser EDR — the community rule set (rules/, published as 0x13d-attack-rules-community), the MV3 extension (apps/extension), the shared rule schema (packages/rule-schema), and the VS Code authoring tool (apps/vscode).",
+  "workspaces": [
+    "packages/*",
+    "rules",
+    "apps/extension",
+    "apps/vscode"
+  ],
+  "devDependencies": {
+    "tsx": "^4.19.2",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "prepare": "npm run build -w @attack/rule-schema && npm run build -w 0x13d-attack-rules-community",
+    "build:schema": "npm run build -w @attack/rule-schema",
+    "build:rules": "npm run build -w 0x13d-attack-rules-community",
+    "build:extension": "npm run build -w attack-extension",
+    "gen:schema": "npm run gen:schema -w attack-extension",
+    "check:schema": "npm run check:schema -w attack-extension",
+    "test": "npm test -w 0x13d-attack-rules-community && npm test -w attack-extension",
+    "typecheck": "npm run typecheck -w @attack/rule-schema && npm run typecheck -w 0x13d-attack-rules-community && npm run typecheck -w attack-extension",
+    "pack:rules": "npm run build:rules && npm pack ./rules"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "attack rule": {
+    "scope": "json",
+    "prefix": "attackrule",
+    "description": "A new 0x13d::att&ck detection rule",
+    "body": [
+      "{",
+      "  \"id\": \"user.${1:my-rule}\",",
+      "  \"name\": \"${2:My rule}\",",
+      "  \"technique\": \"${3:T1176.001}\",",
+      "  \"scope\": \"${4|management,webNavigation,cookie,download,tab,window|}\",",
+      "  \"condition\": { \"field\": \"${5:payload.installType}\", \"op\": \"${6|eq,ne,exists,in,nin,contains,containsAny,gt,lt,gte,lte|}\", \"value\": \"${7:development}\" },",
+      "  \"responses\": [\"${8|alert,disableExtension,closeTab|}\"],",
+      "  \"enabled\": true",
+      "}"
+    ]
+  }
+}

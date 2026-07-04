@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Permissions requested</title>
+    <style>
+      body{font:15px/1.6 system-ui,sans-serif;max-width:460px;margin:60px auto;padding:0 20px;color:#222}
+      .card{border:1px solid #ddd;border-radius:10px;padding:24px;box-shadow:0 6px 24px rgba(0,0,0,.06)}
+      .note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;padding:8px 10px;border-radius:6px;margin:12px 0}
+      ul{padding-left:18px} button{margin-top:12px;padding:9px 16px;background:#163a8a;color:#fff;border:0;border-radius:6px}
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>“Doc Sync” wants access</h1>
+      <div class="note"><strong>Benign T1528 demo.</strong> A mock OAuth consent screen requesting high-risk
+        scopes from an unknown app — the shape of a consent-phishing attack. The EDR detects the navigation and
+        closes the tab. Nothing is granted; no data leaves your machine.</div>
+      <p>This app is requesting permission to:</p>
+      <ul><li>Read your mail (<code>mail.read</code>)</li><li>Maintain access to data you've given it access to (<code>offline_access</code>)</li><li>Read all files you can access (<code>files.read.all</code>)</li></ul>
+      <button>Accept</button>
+    </div>
+  </body>
+</html>

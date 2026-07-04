@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Totally Not Evil (attack T1176 demo target)",
+  "version": "1.0",
+  "description": "BENIGN demo target. Does nothing harmful — it only requests the permissions a rogue extension would, so the attack EDR flags + disables it. Safe to load and delete.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "cookies",
+    "webRequest",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ]
+}

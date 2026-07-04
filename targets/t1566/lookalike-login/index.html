@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sign in</title>
+    <style>
+      body { font: 15px/1.5 system-ui, sans-serif; background: #f4f5f7; color: #222; display: grid; place-items: center; min-height: 100vh; margin: 0; }
+      .card { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 28px 32px; width: 320px; box-shadow: 0 6px 24px rgba(0,0,0,.06); }
+      h1 { font-size: 18px; margin: 0 0 4px; }
+      .note { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; font-size: 12px; padding: 8px 10px; border-radius: 6px; margin: 14px 0; }
+      label { display: block; font-size: 12px; color: #555; margin-top: 12px; }
+      input { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 6px; margin-top: 4px; box-sizing: border-box; }
+      button { width: 100%; margin-top: 16px; padding: 9px; background: #163a8a; color: #fff; border: 0; border-radius: 6px; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Sign in to your account</h1>
+      <div class="note">
+        <strong>Benign demo target</strong> — this is a harmless local page imitating a lookalike-login site so
+        the <code>0x13d::att&amp;ck</code> EDR detects the navigation (T1566.002). It collects nothing; the form
+        does nothing. If the EDR is active, you may not even see this — it closes the tab.
+      </div>
+      <form onsubmit="return false;">
+        <label>Email<input type="email" placeholder="you@example.com" /></label>
+        <label>Password<input type="password" placeholder="••••••••" /></label>
+        <button type="submit">Sign in</button>
+      </form>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1189 — benign drive-by redirect-chain target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1189 target — Drive-by Compromise</h1>
+  <p>
+    Clicking once below starts an <strong>automatic client-redirect chain</strong> (3 meta-refresh hops, no
+    further clicks) — the delivery pattern of a drive-by. With the <code>attack</code> EDR loaded, once the chain
+    reaches the threshold (default 3) it raises <strong>T1189</strong> and <strong>closes the tab</strong>. All
+    pages are harmless; nothing executes.
+  </p>
+
+  <p><a href="hop1.html">➡ Start the redirect chain (hop1 → hop2 → hop3 → landing)</a></p>
+
+  <hr>
+  <p class="note">
+    Keyed on <strong>redirect behavior</strong> (chain length), not the destination — distinct from T1566.002
+    (lookalike), T1204.001 (blocklist IOC), T1566.003 (open-redirect). A single normal redirect does not fire.
+  </p>
+</body>
+</html>

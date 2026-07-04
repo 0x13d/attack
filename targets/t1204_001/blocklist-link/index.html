@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1204.001 — benign malicious-link target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1204.001 target — User Execution: Malicious Link</h1>
+  <p>
+    This stands in for a phishing message. The link below points to a host on the EDR's
+    <strong>threat blocklist</strong> (a sample IOC, <code>known-bad.test</code>, mapped to localhost). With the
+    <code>attack</code> EDR loaded, following it raises a <strong>T1204.001</strong> detection and the EDR
+    <strong>closes the tab</strong> (active prevention — the destination is explicitly known-bad).
+  </p>
+
+  <p><a href="http://known-bad.test:8000/landing">➡ Follow the malicious link (→ <code>known-bad.test</code>)</a></p>
+
+  <hr>
+  <p class="note">
+    Control: a link to <a href="http://safe-site.test:8000/">safe-site.test</a> (not on the blocklist) is
+    <strong>not</strong> flagged. T1204.001 is keyed on a known-bad IOC, distinct from the T1566.002 lookalike
+    heuristic and the T1566.003 open-redirect.
+  </p>
+</body>
+</html>

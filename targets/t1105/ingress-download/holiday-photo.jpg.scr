@@ -1,0 +1,5 @@
+BENIGN DEMO ARTIFACT — attack / T1105 Ingress Tool Transfer (double-extension mask).
+
+This is plain text, not a screensaver and not an executable. Its name ("holiday-photo.jpg.scr") exhibits the
+*shape* of a double-extension masking trick so the EDR's download rule fires and cancels it. It runs nothing.
+Safe to open in a text editor, safe to delete.

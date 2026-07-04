@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1204.002 — benign lure-download target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    a.dl { display: inline-block; margin: .35rem 0; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1204.002 target — User Execution: Malicious File</h1>
+  <p>
+    Each link downloads a <strong>harmless text file</strong> whose <em>name</em> is a user-execution lure — a
+    container / shortcut / installer a victim would be tricked into double-clicking to run. With the
+    <code>attack</code> EDR loaded, each should raise a <strong>detection alert</strong> (T1204.002). These are
+    <strong>detect + alert</strong> — the download is <em>not</em> cancelled (we can't see the user run it; the
+    transfer-stage cancel is T1105's job). Nothing here executes.
+  </p>
+
+  <p><a class="dl" href="invoice.iso" download>⬇ Download <code>invoice.iso</code></a><br>
+    <span class="note">Disk-image container (mounts to run, bypasses mark-of-the-web).</span></p>
+
+  <p><a class="dl" href="shortcut.lnk" download>⬇ Download <code>shortcut.lnk</code></a><br>
+    <span class="note">Shortcut that would run a command on double-click.</span></p>
+
+  <hr>
+  <p class="note">
+    Control (should <strong>not</strong> trigger T1204.002 — not a lure container):
+    a normal <a href="data:text/plain,benign" download="report.pdf">report.pdf</a>.
+  </p>
+</body>
+</html>

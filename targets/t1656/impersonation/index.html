@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1656 — benign brand-impersonation target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1656 target — Impersonation</h1>
+  <p>
+    This stands in for a phishing page hosted on an <strong>unrelated domain</strong> that <em>claims</em> to be a
+    brand's login. The link navigates to a URL combining a protected <strong>brand term</strong>
+    (<code>paypal</code>) with an <strong>auth-context keyword</strong> (<code>login</code>/<code>verify</code>) —
+    while the registrable domain is not the brand's. With the <code>attack</code> EDR loaded it raises
+    <strong>T1656</strong>. Benign + local; nothing runs.
+  </p>
+
+  <p><a href="paypal/login/verify.html">➡ Open the impersonation page (<code>/paypal/login/verify</code>)</a></p>
+
+  <hr>
+  <p class="note">
+    Complements T1566.002: that rule inspects the <em>host</em> (lookalike/typosquat); T1656 catches the brand +
+    auth context in the <em>path</em> on a non-brand domain. A <a href="paypal/news.html">/paypal/news</a> link
+    (brand term, no auth keyword) does <strong>not</strong> fire.
+  </p>
+</body>
+</html>

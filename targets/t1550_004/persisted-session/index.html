@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Persisted session cookie — demo</title>
+    <style>
+      body { font: 15px/1.6 system-ui, sans-serif; max-width: 560px; margin: 60px auto; padding: 0 20px; color: #222; }
+      .note { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; padding: 10px 12px; border-radius: 8px; }
+      code { background: #f3eee4; padding: 1px 5px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1>Persisted session cookie set</h1>
+    <p class="note">
+      <strong>Benign demo target.</strong> On load, this page set a session/auth cookie with a
+      <strong>far-future expiry</strong> — the shape of a stolen session being <em>pinned for reuse</em>
+      (T1550.004), distinct from the T1539 weak-flag case. The <code>0x13d::att&amp;ck</code> EDR should detect
+      the persistence and remove it. Nothing here is sent anywhere.
+    </p>
+    <p>Cookie set: <code id="ck"></code></p>
+    <script>
+      // A session/auth-named cookie made PERSISTENT (has an expiry) → reuse/replay shape (T1550.004).
+      document.cookie = 'authtoken=demo-' + Date.now() + '; path=/; expires=Fri, 31 Dec 2099 23:59:59 GMT; SameSite=Lax; Secure';
+      document.getElementById('ck').textContent = document.cookie || '(removed by the EDR)';
+    </script>
+  </body>
+</html>

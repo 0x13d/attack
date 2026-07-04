@@ -1,0 +1,38 @@
+{
+  "name": "attack-rule-authoring",
+  "displayName": "0x13d::att&ck — Rule Authoring",
+  "description": "Author and validate 0x13d::att&ck (Browser EDR) detection rules — schema validation, completion, and a template/validate command. Exports the same declarative schema the extension loads.",
+  "version": "0.1.0",
+  "publisher": "ariugwu",
+  "private": true,
+  "license": "MIT",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Programming Languages", "Linters", "Snippets"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "jsonValidation": [
+      { "fileMatch": ["*.attackrule.json"], "url": "./schemas/attack-rule.schema.json" }
+    ],
+    "commands": [
+      { "command": "attack.newRule", "title": "0x13d::att&ck: New rule from template" },
+      { "command": "attack.validateRule", "title": "0x13d::att&ck: Validate rule in active editor" },
+      { "command": "attack.runScenarios", "title": "0x13d::att&ck: Run scenario harness (detection + false-positive report)" }
+    ],
+    "snippets": [
+      { "language": "json", "path": "./snippets/attackrule.code-snippets" }
+    ]
+  },
+  "dependencies": {
+    "@attack/rule-schema": "*",
+    "0x13d-attack-rules-community": "*"
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "properties": {
+    "orgName": {
+      "title": "Organization name",
+      "description": "Shown to end users as 'Settings controlled by <orgName>'.",
+      "type": "string"
+    },
+    "allowUserRules": {
+      "title": "Allow user-authored rules",
+      "description": "When false, end users cannot add/edit rules and stored user rules are ignored.",
+      "type": "boolean"
+    },
+    "protectedDomains": {
+      "title": "Protected login domains",
+      "description": "Brand domains to protect from lookalike/typosquat navigation (T1566.002).",
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

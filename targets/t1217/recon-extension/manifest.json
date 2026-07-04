@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Helper (attack T1217 demo target)",
+  "version": "1.0",
+  "description": "BENIGN demo target. Does nothing harmful — it only requests browser-data-discovery permissions (bookmarks, history, topSites) so the attack EDR flags it as recon-capable (T1217). Safe to load and delete.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "bookmarks",
+    "history",
+    "topSites"
+  ]
+}

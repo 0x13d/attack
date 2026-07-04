@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist
+*.tsbuildinfo
+
+# Netlify
+.netlify
+
+# Logs
+*.log
+npm-debug.log*
+
+# Env
+.env
+.env.*
+
+# OS
+.DS_Store
+*.tgz

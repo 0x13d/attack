@@ -1,0 +1,25 @@
+{
+  "name": "@attack/rule-schema",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Canonical declarative rule schema (ADR-002/ADR-004): types, validator, safe evaluator, JSON-Schema builder. Shared by the engine, brochure, and VSCode. Built to CommonJS dist + .d.ts; zero runtime deps.",
+  "exports": {
+    ".": {
+      "types": "./dist/cjs/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/cjs/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json && tsc -p tsconfig.esm.json && node -e \"require('fs').writeFileSync('dist/esm/package.json', JSON.stringify({type:'module'})+'\\n')\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1566.003 — benign open-redirect target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1566.003 target — Spearphishing via Service</h1>
+  <p>
+    This page stands in for a <strong>trusted service with an open-redirect</strong>. The link below navigates to
+    a URL on <em>this</em> host carrying a <code>?url=</code> parameter that points <strong>off-domain</strong> —
+    the laundered-link delivery vector. With the <code>attack</code> EDR loaded, navigating it raises a
+    <strong>T1566.003</strong> detection. Nothing actually redirects; the detection is on the URL itself.
+  </p>
+
+  <p><a href="?url=https://account-verify.example/login">➡ Follow the service link
+    (<code>?url=</code> → off-domain)</a></p>
+
+  <hr>
+  <p class="note">
+    Control: a same-site link <a href="?next=/dashboard">?next=/dashboard</a> (relative) and
+    <a href="?q=hello">?q=hello</a> (no redirect param) do <strong>not</strong> fire — the rule only flags a
+    redirect param pointing to a <em>different registrable domain</em>.
+  </p>
+</body>
+</html>

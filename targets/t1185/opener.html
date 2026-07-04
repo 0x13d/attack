@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Your account — opener tab (T1185 demo)</title>
+    <style>body{font:15px/1.6 system-ui,sans-serif;max-width:560px;margin:60px auto;padding:0 20px}
+      .note{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:10px 12px;border-radius:8px}</style>
+  </head>
+  <body>
+    <h1>Your account (the opener tab)</h1>
+    <p class="note"><strong>Benign T1185 demo.</strong> This is the "trusted" tab. Click the link below — it
+      opens an attacker tab with <code>target=_blank</code> and no <code>rel="noopener"</code>, so that tab can
+      reach back and rewrite <em>this</em> one. The EDR should detect the cross-tab hijack and close this tab.</p>
+    <p><a href="http://127.0.0.1:8001/attacker.html" target="_blank">Open the (benign) attacker tab →</a></p>
+  </body>
+</html>

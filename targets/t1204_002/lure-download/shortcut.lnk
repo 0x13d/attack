@@ -1,0 +1,4 @@
+BENIGN DEMO ARTIFACT — attack / T1204.002 User Execution: Malicious File.
+
+Plain text, NOT a real Windows shortcut. Its name ("shortcut.lnk") exhibits the shape of a user-execution
+lure (a .lnk shortcut that would run a command on double-click). It runs nothing. Safe to open, safe to delete.

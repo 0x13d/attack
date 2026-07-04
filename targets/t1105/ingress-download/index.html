@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1105 — benign ingress-download target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    a.dl { display: inline-block; margin: .35rem 0; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1105 target — Ingress Tool Transfer</h1>
+  <p>
+    Each link downloads a <strong>harmless text file</strong> whose <em>name</em> exhibits the shape of a
+    tool/payload being pulled onto the host. With the <code>attack</code> EDR loaded, the download should be
+    <strong>cancelled</strong> and a detection recorded. Nothing here runs.
+  </p>
+
+  <p><a class="dl" href="invoice.hta" download>⬇ Download <code>invoice.hta</code></a><br>
+    <span class="note">Standalone rarely-legitimate <code>.hta</code> artifact.</span></p>
+
+  <p><a class="dl" href="holiday-photo.jpg.scr" download>⬇ Download <code>holiday-photo.jpg.scr</code></a><br>
+    <span class="note">Executable extension masked by a benign-looking <code>.jpg</code> (double-extension).</span></p>
+
+  <hr>
+  <p class="note">
+    Control (should <strong>not</strong> trigger): a normal
+    <a href="data:text/plain,benign" download="report.pdf">report.pdf</a> downloads without a detection.
+  </p>
+</body>
+</html>

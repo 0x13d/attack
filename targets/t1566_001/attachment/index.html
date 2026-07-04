@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T1566.001 — benign spearphishing-attachment target</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; max-width: 40rem; margin: 3rem auto; padding: 0 1rem; color: #1a1a1a; }
+    code { background: #f0f0f0; padding: 0 .25rem; border-radius: 3px; }
+    a.dl { display: inline-block; margin: .35rem 0; }
+    .note { color: #555; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Benign T1566.001 target — Spearphishing Attachment</h1>
+  <p>
+    This stands in for a phishing page (webmail / file-share) serving an <strong>attachment lure</strong>. The
+    download below is a <strong>harmless text file</strong> named like a macro-enabled document. Because this
+    page is served over plain <code>http://localhost</code>, the download's <strong>referrer</strong> is an
+    insecure-HTTP origin — a delivery-context red flag — so the <code>attack</code> EDR raises a
+    <strong>T1566.001</strong> detection. (In the wild the referrer would be a webmail/file-share host.)
+  </p>
+
+  <p><a class="dl" href="invoice.docm" download>⬇ Download <code>invoice.docm</code></a><br>
+    <span class="note">Macro-enabled-document lure, delivered from this (insecure-HTTP) page.</span></p>
+
+  <hr>
+  <p class="note">
+    The rule is keyed on the <strong>delivery context</strong>: the same <code>.docm</code> downloaded
+    <em>directly</em> (no referrer) would <strong>not</strong> be flagged as spearphishing.
+  </p>
+</body>
+</html>
