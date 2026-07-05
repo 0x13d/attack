@@ -1,11 +1,12 @@
 {
   "name": "attack-rule-authoring",
   "displayName": "0x13d::att&ck — Rule Authoring",
-  "description": "Author and validate 0x13d::att&ck (Browser EDR) detection rules — schema validation, completion, and a template/validate command. Exports the same declarative schema the extension loads.",
+  "description": "Author, validate, and tune 0x13d::att&ck (Browser EDR) detection rules — schema validation, completion, and a scenario harness that reports detection + false-positive rates.",
   "version": "0.1.0",
   "publisher": "ariugwu",
   "private": true,
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
+  "repository": { "type": "git", "url": "https://github.com/0x13d/attack.git", "directory": "apps/vscode" },
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Programming Languages", "Linters", "Snippets"],
   "main": "./out/extension.js",
@@ -28,12 +29,17 @@
     "0x13d-attack-rules-community": "*"
   },
   "scripts": {
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "compile": "node esbuild.mjs",
+    "watch": "node esbuild.mjs --watch",
+    "typecheck": "tsc -p ./ --noEmit",
+    "vscode:prepublish": "npm run compile",
+    "package": "npm run typecheck && npm run compile && vsce package --no-dependencies -o attack-rule-authoring.vsix"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
     "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.2.1",
+    "esbuild": "^0.28.1",
     "typescript": "^5.4.5"
   }
 }

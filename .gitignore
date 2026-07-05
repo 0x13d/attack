@@ -19,3 +19,7 @@ npm-debug.log*
 # OS
 .DS_Store
 *.tgz
+
+# VS Code extension build output + packaged vsix
+apps/vscode/out/
+*.vsix

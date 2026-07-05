@@ -1,4 +1,11 @@
+# The extension is bundled into out/extension.js (esbuild), so the .vsix ships only that + the static
+# contribution assets (schemas/, snippets/). Everything below is build input, not runtime.
 src/**
+node_modules/**
 .vscode/**
 tsconfig.json
+esbuild.mjs
+package-lock.json
+.gitignore
+**/*.ts
 **/*.map

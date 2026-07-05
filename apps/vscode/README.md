@@ -24,16 +24,32 @@ Author and validate **0x13d::att&ck** (Browser EDR) detection rules in VSCode. R
 2. Edit with completion + inline validation.
 3. **Validate**, then import the JSON in the extension's admin dashboard (the **Rules** page).
 
+## Install
+
+Build the `.vsix` and install it into VS Code:
+
+```bash
+npm install
+npm run package                 # typecheck + bundle (esbuild) + vsce → attack-rule-authoring.vsix
+code --install-extension attack-rule-authoring.vsix
+```
+
+Or, in VS Code: **Extensions** view → **⋯** menu → **Install from VSIX…** → pick the file. The extension is
+bundled into a single self-contained `out/extension.js` (the workspace packages are inlined by esbuild), so
+the `.vsix` has no `node_modules` and installs cleanly anywhere.
+
 ## Develop
 
 ```bash
 npm install
-npm run compile     # tsc → out/extension.js
-# Press F5 in VSCode to launch an Extension Development Host.
+npm run watch       # esbuild rebuild loop → out/extension.js
+# Press F5 in VS Code to launch an Extension Development Host with the extension loaded.
+npm run typecheck   # tsc --noEmit (esbuild does not type-check)
 ```
 
 ## Source of truth
 
-The authoritative validator is the extension's `src/src/schema/validate.ts`; `src/validate.ts` here is a
-hand-synced port, and `schemas/attack-rule.schema.json` mirrors the structure. Single rule schema across
-Blockly (brochure), this extension, and the engine loader.
+The validator + rule schema are single-sourced in `@attack/rule-schema`, and the corpus + scenario runner come
+from `0x13d-attack-rules-community` — both consumed directly, not re-copied. `schemas/attack-rule.schema.json`
+is generated from the engine (`npm run gen:schema` at the repo root). One rule schema across the brochure
+editor, this extension, and the engine loader.
