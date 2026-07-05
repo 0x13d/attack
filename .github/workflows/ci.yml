@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # `npm ci` runs `prepare`, which builds @attack/rule-schema and the rules package.
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test (rules package + extension)
+        run: npm test
+
+      - name: Schema drift check
+        run: npm run check:schema
+
+      - name: Build the extension (+ trust self-check)
+        run: npm run build:extension

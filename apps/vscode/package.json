@@ -9,6 +9,9 @@
   "repository": { "type": "git", "url": "https://github.com/0x13d/attack.git", "directory": "apps/vscode" },
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Programming Languages", "Linters", "Snippets"],
+  "icon": "assets/icon.png",
+  "galleryBanner": { "color": "#232B3E", "theme": "dark" },
+  "keywords": ["mitre", "attack", "browser-edr", "detection-rules", "security"],
   "main": "./out/extension.js",
   "contributes": {
     "jsonValidation": [

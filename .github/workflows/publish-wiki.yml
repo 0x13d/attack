@@ -1,0 +1,31 @@
+name: Publish Wiki
+
+# Version-control the GitHub wiki from the main repo: the Markdown lives in wiki/, and this mirrors it to the
+# repo's wiki (github.com/<owner>/<repo>.wiki.git) whenever those files change on main. One-time setup: enable
+# Wikis in repo settings and create one page via the web UI so the .wiki.git repo exists (see
+# wiki/Contributing-to-this-Wiki.md).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wiki/**'
+      - '.github/workflows/publish-wiki.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-wiki
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync wiki/ to the GitHub wiki
+        uses: Andrew-Chen-Wang/github-wiki-action@v4
+        with:
+          path: wiki/
+          token: ${{ secrets.GITHUB_TOKEN }}
