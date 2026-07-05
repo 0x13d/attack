@@ -33,7 +33,7 @@
     "watch": "node esbuild.mjs --watch",
     "typecheck": "tsc -p ./ --noEmit",
     "vscode:prepublish": "npm run compile",
-    "package": "npm run typecheck && npm run compile && vsce package --no-dependencies -o attack-rule-authoring.vsix"
+    "package": "npm run typecheck && npm run compile && node -e \"require('fs').mkdirSync('../../../../_releases/vsix',{recursive:true})\" && vsce package --no-dependencies -o ../../../../_releases/vsix/"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

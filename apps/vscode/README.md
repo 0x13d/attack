@@ -30,13 +30,15 @@ Build the `.vsix` and install it into VS Code:
 
 ```bash
 npm install
-npm run package                 # typecheck + bundle (esbuild) + vsce → attack-rule-authoring.vsix
-code --install-extension attack-rule-authoring.vsix
+npm run package   # typecheck + bundle (esbuild) + vsce → _releases/vsix/attack-rule-authoring-<version>.vsix
+code --install-extension ../../../../_releases/vsix/attack-rule-authoring-0.1.0.vsix
 ```
 
-Or, in VS Code: **Extensions** view → **⋯** menu → **Install from VSIX…** → pick the file. The extension is
-bundled into a single self-contained `out/extension.js` (the workspace packages are inlined by esbuild), so
-the `.vsix` has no `node_modules` and installs cleanly anywhere.
+`npm run package` publishes the versioned `.vsix` into the central [`_releases/vsix/`](../../../../_releases)
+local feed (the same feed the npm artifacts use), so it's not left loose in the repo. Or install from VS Code:
+**Extensions** view → **⋯** menu → **Install from VSIX…** → pick the file. The extension is bundled into a
+single self-contained `out/extension.js` (the workspace packages are inlined by esbuild), so the `.vsix` has
+no `node_modules` and installs cleanly anywhere.
 
 ## Develop
 
